@@ -1,9 +1,6 @@
 package planets
 
 import (
-	"math/rand"
-	"time"
-
 	"github.com/rampager01/starfire-solar-galaxy-generator/pkg/mechanics"
 	"github.com/rampager01/starfire-solar-galaxy-generator/pkg/moons"
 	"github.com/rampager01/starfire-solar-galaxy-generator/pkg/stars"
@@ -54,40 +51,7 @@ type Planet struct {
 	TidallyLocked bool
 }
 
-func GeneratePlanet(orbit int, starType stars.StarType, s rand.Source) Planet {
-	orbitalRadius := mechanics.Radius{Radius: orbit, Unit: mechanics.LightMinute}
-
-	r := rand.New(s)
-	ranNum := r.Intn(99) + 1
-	mass := getMass(ranNum)
-
-	zone, isLocked := getFormationZone(orbitalRadius.Radius, starType)
-
-	planetType := getPlanetType(zone, mass)
-
-	ranNum = r.Intn(99) + 1
-	m := generateMoons(planetType, mass, ranNum)
-
-	index := 0
-	if planetType == TypeT || planetType == TypeSt {
-		index = r.Intn(9) + 1
-	}
-
-	ranNum = r.Intn(9) + 1
-	resExIndex := getReiNumber(planetType, ranNum)
-
-	return Planet{
-		Mass:          mass,
-		Moons:         m,
-		Orbit:         orbitalRadius,
-		PType:         planetType,
-		HIndex:        index,
-		Resexindex:    resExIndex,
-		TidallyLocked: isLocked,
-	}
-}
-
-func getMass(randInt int) PlanetMass {
+func GetMass(randInt int) PlanetMass {
 	if randInt >= 3 && randInt < 6 {
 		return Na
 	}
@@ -103,7 +67,7 @@ func getMass(randInt int) PlanetMass {
 	return None
 }
 
-func getFormationZone(orbit int, starType stars.StarType) (PlanetFormationZone, bool) {
+func GetFormationZone(orbit int, starType stars.StarType) (PlanetFormationZone, bool) {
 	isTideLocked := false
 	var zone PlanetFormationZone
 	switch starType {
@@ -231,7 +195,7 @@ func getFormationZone(orbit int, starType stars.StarType) (PlanetFormationZone, 
 	return zone, isTideLocked
 }
 
-func getPlanetType(zone PlanetFormationZone, mass PlanetMass) PlanetType {
+func GetPlanetType(zone PlanetFormationZone, mass PlanetMass) PlanetType {
 	switch zone {
 	case Hot:
 		{
@@ -327,148 +291,7 @@ func getPlanetType(zone PlanetFormationZone, mass PlanetMass) PlanetType {
 	return No
 }
 
-func generateMoons(planetType PlanetType, mass PlanetMass, num int) []moons.Moon {
-	numMoons := 0
-	switch planetType {
-	case TypeB, TypeT, TypeSt:
-		{
-			switch mass {
-			case MassOne:
-				{
-					numMoons = getNumberOfMoons(num - 50)
-				}
-			case MassTwo:
-				{
-					numMoons = getNumberOfMoons(num - 10)
-				}
-			case MassThree:
-				{
-					numMoons = getNumberOfMoons(num)
-				}
-			}
-		}
-	case TypeH:
-		{
-			switch mass {
-			case MassOne:
-				{
-					numMoons = getNumberOfMoons(num - 65)
-				}
-			case MassTwo:
-				{
-					numMoons = getNumberOfMoons(num - 25)
-				}
-			case MassThree:
-				{
-					numMoons = getNumberOfMoons(num - 15)
-				}
-			}
-		}
-	case TypeF:
-		{
-			numMoons = getNumberOfMoons(num - 15)
-		}
-	case TypeV:
-		{
-			numMoons = getNumberOfMoons(num - 35)
-		}
-	case TypeI:
-		{
-			numMoons = getNumberOfMoons(num + 35)
-		}
-	case TypeG:
-		{
-			numMoons = getNumberOfMoons(num + 50)
-		}
-	}
-
-	planetMoons := make([]moons.Moon, numMoons)
-	s := rand.NewSource(time.Now().UnixNano())
-	r := rand.New(s)
-	a := 0
-	priorDistance := 0
-	for i := 0; i < numMoons; i++ {
-		isBig := false
-		isLocked := false
-		if i == 0 {
-			isBig, isLocked = moons.CheckTideLocked(numMoons, 0)
-		}
-		a = mechanics.FractionRoundUp(r.Intn(9)+1, 2)
-		reiNum := r.Intn(9) + 1
-		planetMoons = append(planetMoons, generateMoon(isBig, isLocked, planetType, reiNum, a, priorDistance))
-		priorDistance = planetMoons[i].MOrbit.Radius
-	}
-	return planetMoons
-}
-
-func getNumberOfMoons(rand int) int {
-	if rand >= 1 && rand < 56 {
-		return 1
-	}
-	if rand >= 56 && rand < 86 {
-		return 2
-	}
-	if rand >= 86 && rand < 106 {
-		return 3
-	}
-	if rand >= 106 && rand < 127 {
-		return 4
-	}
-	if rand >= 127 {
-		return 5
-	}
-	return 0
-}
-
-func generateMoon(isBig, isLocked bool, planetType PlanetType, reiNum, num, priorDistance int) moons.Moon {
-	return moons.Moon{
-		MType: getMoonType(planetType),
-		MOrbit: mechanics.Radius{
-			Radius: getMoonDistance(priorDistance, num, planetType),
-			Unit:   mechanics.TacticalHex},
-		IsBig:        isBig,
-		IsTideLocked: isLocked,
-		ResExpIndex:  getReiNumber(planetType, reiNum),
-	}
-}
-
-func getMoonType(planetType PlanetType) moons.MoonType {
-	switch planetType {
-	case TypeB, TypeT, TypeSt, TypeG:
-		{
-			return moons.MB
-		}
-	case TypeH, TypeV:
-		{
-			return moons.MH
-		}
-	case TypeI, TypeF:
-		{
-			return moons.MF
-		}
-	}
-	return moons.MB
-}
-
-func getMoonDistance(priorDistance, randNum int, planetType PlanetType) int {
-	switch planetType {
-	case TypeB, TypeF, TypeH, TypeSt, TypeT, TypeV:
-		{
-			priorDistance = priorDistance + mechanics.FractionRoundUp(randNum, 3)
-		}
-	case TypeG, TypeI:
-		{
-			if priorDistance == 0 {
-				priorDistance = mechanics.FractionRoundUp(randNum, 2)
-			} else {
-				priorDistance = priorDistance + randNum
-			}
-		}
-	}
-	return priorDistance
-}
-
-func getReiNumber(planetType PlanetType, randNum int) mechanics.Rei {
+func GetReiNumber(planetType PlanetType, randNum int) mechanics.Rei {
 	switch planetType {
 	case TypeT, TypeSt, TypeV:
 		{
@@ -512,64 +335,5 @@ func determineRei(randNum int) mechanics.Rei {
 		return mechanics.Rich
 	} else {
 		return mechanics.VeryRich
-	}
-}
-
-func ApplyPlanetTidalLocking(planet *Planet, moon *moons.Moon, starType stars.StarType) {
-	switch starType {
-	case stars.WhiteStar, stars.YellowWhiteStar, stars.YellowStar, stars.OrangeStar, stars.RedStar:
-		{
-			if planet.TidallyLocked {
-				switch planet.Mass {
-				case MassTwo, MassThree:
-					{
-						planet.PType = TypeV
-					}
-				case MassOne:
-					{
-						planet.PType = TypeH
-						moon.MType = moons.MH
-					}
-				}
-			} else {
-				if moon.IsTideLocked && planet.PType == TypeG {
-					moon.MType = moons.MH
-				}
-			}
-		}
-	case stars.RedDwarf:
-		{
-			if planet.TidallyLocked {
-				switch planet.Mass {
-				case MassOne:
-					{
-						planet.PType = TypeH
-						moon.MType = moons.MT
-					}
-				case MassTwo:
-					{
-						if moon.IsBig {
-							planet.PType = TypeT
-							moon.MType = moons.MT
-						} else {
-							planet.PType = TypeH
-							moon.MType = moons.MB
-						}
-					}
-				case MassThree:
-					{
-						if moon.IsBig {
-							planet.PType = TypeSt
-							moon.MType = moons.MT
-						} else {
-							planet.PType = TypeH
-							moon.MType = moons.MB
-						}
-					}
-				}
-			} else {
-				moon.MType = moons.MH
-			}
-		}
 	}
 }
