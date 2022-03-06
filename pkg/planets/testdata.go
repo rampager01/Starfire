@@ -5,6 +5,8 @@ import (
 )
 
 var testOrbits []int = []int{2, 5, 8, 14, 26, 50}
+var testRandomNumbers []int = []int{1, 2, 3, 5, 7, 8, 10}
+var testPlanetTypes []PlanetType = []PlanetType{TypeB, TypeF, TypeG, TypeH, TypeI, TypeSt, TypeT, TypeV}
 
 type result struct {
 	zone       PlanetFormationZone

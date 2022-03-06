@@ -55,24 +55,26 @@ type Planet struct {
 }
 
 func GeneratePlanet(orbit int, starType stars.StarType, s rand.Source) Planet {
-	r := rand.New(s)
-
 	orbitalRadius := mechanics.Radius{Radius: orbit, Unit: mechanics.LightMinute}
 
-	a := r.Intn(99) + 1
-	mass := getMass(a)
+	r := rand.New(s)
+	ranNum := r.Intn(99) + 1
+	mass := getMass(ranNum)
 
 	zone, isLocked := getFormationZone(orbitalRadius.Radius, starType)
 
 	planetType := getPlanetType(zone, mass)
 
-	a = r.Intn(99) + 1
-	m := generateMoons(planetType, mass, a)
+	ranNum = r.Intn(99) + 1
+	m := generateMoons(planetType, mass, ranNum)
 
 	index := 0
 	if planetType == TypeT || planetType == TypeSt {
 		index = r.Intn(9) + 1
 	}
+
+	ranNum = r.Intn(9) + 1
+	resExIndex := getReiNumber(planetType, ranNum)
 
 	return Planet{
 		Mass:          mass,
@@ -80,7 +82,7 @@ func GeneratePlanet(orbit int, starType stars.StarType, s rand.Source) Planet {
 		Orbit:         orbitalRadius,
 		PlanetType:    planetType,
 		HIndex:        index,
-		Resexindex:    mechanics.VeryPoor,
+		Resexindex:    resExIndex,
 		TidallyLocked: isLocked,
 	}
 }
@@ -452,7 +454,7 @@ func getMoonDistance(priorDistance, randNum int, planetType PlanetType) int {
 	switch planetType {
 	case TypeB, TypeF, TypeH, TypeSt, TypeT, TypeV:
 		{
-			priorDistance = mechanics.FractionRoundUp(priorDistance+randNum, 3)
+			priorDistance = priorDistance + mechanics.FractionRoundUp(randNum, 3)
 		}
 	case TypeG, TypeI:
 		{
@@ -465,6 +467,7 @@ func getMoonDistance(priorDistance, randNum int, planetType PlanetType) int {
 	}
 	return priorDistance
 }
+
 func getReiNumber(planetType PlanetType, randNum int) mechanics.Rei {
 	switch planetType {
 	case TypeT, TypeSt, TypeV:

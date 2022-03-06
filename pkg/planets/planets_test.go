@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/rampager01/starfire-solar-galaxy-generator/pkg/mechanics"
+	"github.com/rampager01/starfire-solar-galaxy-generator/pkg/moons"
 	"github.com/rampager01/starfire-solar-galaxy-generator/pkg/stars"
 )
 
@@ -64,12 +66,97 @@ func TestGetMass(t *testing.T) {
 
 func TestGetPlanetType(t *testing.T) {
 	massData := []PlanetMass{Na, MassOne, MassTwo, MassThree}
-	zoneData := Lwz //[]PlanetFormationZone{Hot, Lwz, Cold, Gas, Ice}
-	results := []PlanetType{AstB, TypeB, TypeT, TypeSt}
-	for i, mass := range massData {
-		x := getPlanetType(zoneData, mass)
-		if x != results[i] {
-			t.Error("Expected", results[i], "planet type but got", x)
+	zoneData := []PlanetFormationZone{Hot, Lwz, Cold, Gas, Ice}
+	results := [][]PlanetType{
+		{AstB, TypeH, TypeV, TypeV},
+		{AstB, TypeB, TypeT, TypeSt},
+		{AstB, TypeB, TypeB, TypeB},
+		{AstB, TypeB, TypeG, TypeG},
+		{AstF, TypeF, TypeI, TypeI},
+	}
+
+	for i, zone := range zoneData {
+		for j, mass := range massData {
+			x := getPlanetType(zone, mass)
+			if x != results[i][j] {
+				t.Error("Expected", results[i][j], "planet type but got", x)
+			}
 		}
+
+	}
+}
+
+func TestGetNumberOfMoons(t *testing.T) {
+	testData := []int{1, 15, 36, 67, 92, 115, 133}
+	results := []int{1, 1, 1, 2, 3, 4, 5}
+	for i, num := range testData {
+		numMoons := getNumberOfMoons(num)
+		if numMoons != results[i] {
+			t.Error("Expeted", results[i], "received", numMoons)
+		}
+	}
+}
+
+func TestGetMoonType(t *testing.T) {
+	results := []moons.MoonType{moons.MB, moons.MF, moons.MB, moons.MH, moons.MF, moons.MB, moons.MB, moons.MH}
+	for i, planetType := range testPlanetTypes {
+		moonType := getMoonType(planetType)
+		if moonType != results[i] {
+			t.Error("Expected", results[i], "recieved", moonType)
+		}
+	}
+}
+
+func TestDetermineRei(t *testing.T) {
+	results := []mechanics.Rei{
+		mechanics.VeryPoor,
+		mechanics.Poor,
+		mechanics.Poor,
+		mechanics.Normal,
+		mechanics.Normal,
+		mechanics.Rich,
+		mechanics.VeryRich}
+	for i, num := range testRandomNumbers {
+		rei := determineRei(num)
+		if rei != results[i] {
+			t.Error("Expected", results[i], "received", rei)
+		}
+	}
+}
+
+func TestGetReiNumber(t *testing.T) {
+	num := 1
+	results := []mechanics.Rei{
+		mechanics.Normal,
+		mechanics.Normal,
+		mechanics.Poor,
+		mechanics.Normal,
+		mechanics.Normal,
+		mechanics.VeryPoor,
+		mechanics.VeryPoor,
+		mechanics.VeryPoor}
+	for i, planetType := range testPlanetTypes {
+		n := getReiNumber(planetType, num)
+		if n != results[i] {
+			t.Error("Expected", results[i], "received", n)
+		}
+	}
+}
+
+func TestGenerateMoon(t *testing.T) {
+	testMoon := moons.Moon{
+		MType: moons.MB,
+		MOrbit: mechanics.Radius{
+			Radius: 6,
+			Unit:   mechanics.TacticalHex,
+		},
+		IsBig:        false,
+		IsTideLocked: false,
+		ResExpIndex:  mechanics.Normal,
+	}
+
+	moon := generateMoon(false, false, TypeT, 7, 9, 3)
+	if moon != testMoon {
+		t.Error("Expected", testMoon, "received", moon)
 	}
 }

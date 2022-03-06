@@ -50,7 +50,8 @@ type Star struct {
 	StarType           StarType
 }
 
-//CalculateTitusBode calculates the Titus Bode planetary distance relationship.  This function provides the orbial radii of the planets orbiting a given star
+//CalculateTitusBode calculates the Titus Bode planetary distance relationship.
+//This function provides the orbial radii of the planets orbiting a given star
 func CalculateTitusBode(star Star, s rand.Source) []int {
 	diffTest := false
 	orbits := []int{}
