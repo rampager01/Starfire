@@ -44,7 +44,7 @@ const (
 type Planet struct {
 	Mass          PlanetMass
 	Moons         []moons.Moon
-	Orbit         mechanics.Radius
+	Orbit         mechanics.Orbit
 	PType         PlanetType
 	HIndex        int
 	Resexindex    mechanics.Rei

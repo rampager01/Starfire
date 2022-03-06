@@ -29,13 +29,13 @@ func ExampleGetFormationZone() {
 func ExampleGetMass() {
 	fmt.Println(GetMass(28))
 	//Output:
-	//MassTwo
+	//Mass 2
 }
 
 func ExampleGetPlanetType() {
 	fmt.Println(GetPlanetType(Lwz, MassTwo))
 	//Output:
-	//TypeT
+	//Type T
 }
 
 func TestGetFormationZone(t *testing.T) {

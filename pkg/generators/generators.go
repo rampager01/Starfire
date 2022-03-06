@@ -28,13 +28,19 @@ func GenerateWarpPoint(bearing, radius, wpType, visiblity int) warppoints.WarpPo
 }
 
 func GeneratePlanet(orbit int, starType stars.StarType, s rand.Source) planets.Planet {
-	orbitalRadius := mechanics.Radius{Radius: orbit, Unit: mechanics.LightMinute}
-
 	r := rand.New(s)
-	ranNum := r.Intn(99) + 1
+	ranNum := r.Intn(11) + 1
+	orbitalRadius := mechanics.Orbit{
+		Bearing: mechanics.Radian(ranNum),
+		Radius: mechanics.Radius{
+			Radius: orbit,
+			Unit:   mechanics.LightMinute},
+	}
+	r = rand.New(s)
+	ranNum = r.Intn(99) + 1
 	mass := planets.GetMass(ranNum)
 
-	zone, isLocked := planets.GetFormationZone(orbitalRadius.Radius, starType)
+	zone, isLocked := planets.GetFormationZone(orbitalRadius.Radius.Radius, starType)
 
 	planetType := planets.GetPlanetType(zone, mass)
 

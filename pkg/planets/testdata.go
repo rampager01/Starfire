@@ -122,9 +122,12 @@ var testMoon moons.Moon = moons.Moon{
 var testPlanetB Planet = Planet{
 	Mass:  MassTwo,
 	Moons: []moons.Moon{testMoon},
-	Orbit: mechanics.Radius{
-		Radius: 1,
-		Unit:   mechanics.LightMinute,
+	Orbit: mechanics.Orbit{
+		Bearing: mechanics.Radian(2),
+		Radius: mechanics.Radius{
+			Radius: 2,
+			Unit:   mechanics.LightMinute,
+		},
 	},
 	PType:         TypeB,
 	HIndex:        0,

@@ -23,9 +23,12 @@ func TestApplyPlanetTidalLocking(t *testing.T) {
 	testPlanetB := planets.Planet{
 		Mass:  planets.MassTwo,
 		Moons: []moons.Moon{testMoon},
-		Orbit: mechanics.Radius{
-			Radius: 1,
-			Unit:   mechanics.LightMinute,
+		Orbit: mechanics.Orbit{
+			Bearing: mechanics.Radian(2),
+			Radius: mechanics.Radius{
+				Radius: 1,
+				Unit:   mechanics.LightMinute,
+			},
 		},
 		PType:         planets.TypeB,
 		HIndex:        0,
@@ -35,9 +38,12 @@ func TestApplyPlanetTidalLocking(t *testing.T) {
 	result := planets.Planet{
 		Mass:  planets.MassTwo,
 		Moons: []moons.Moon{testMoon},
-		Orbit: mechanics.Radius{
-			Radius: 1,
-			Unit:   mechanics.LightMinute,
+		Orbit: mechanics.Orbit{
+			Bearing: mechanics.Radian(2),
+			Radius: mechanics.Radius{
+				Radius: 1,
+				Unit:   mechanics.LightMinute,
+			},
 		},
 		PType:         planets.TypeT,
 		HIndex:        0,
