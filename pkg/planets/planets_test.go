@@ -144,19 +144,37 @@ func TestGetReiNumber(t *testing.T) {
 }
 
 func TestGenerateMoon(t *testing.T) {
-	testMoon := moons.Moon{
-		MType: moons.MB,
+	moon := generateMoon(true, true, TypeT, 7, 9, 3)
+	if moon != testMoon {
+		t.Error("Expected", testMoon, "received", moon)
+	}
+}
+
+func TestApplyPlanetTidalLocking(t *testing.T) {
+	result := Planet{
+		Mass:  MassTwo,
+		Moons: []moons.Moon{testMoon},
+		Orbit: mechanics.Radius{
+			Radius: 1,
+			Unit:   mechanics.LightMinute,
+		},
+		PType:         TypeT,
+		HIndex:        0,
+		Resexindex:    mechanics.Normal,
+		TidallyLocked: true,
+	}
+	moonResult := moons.Moon{
+		MType: moons.MT,
 		MOrbit: mechanics.Radius{
 			Radius: 6,
 			Unit:   mechanics.TacticalHex,
 		},
-		IsBig:        false,
-		IsTideLocked: false,
+		IsBig:        true,
+		IsTideLocked: true,
 		ResExpIndex:  mechanics.Normal,
 	}
-
-	moon := generateMoon(false, false, TypeT, 7, 9, 3)
-	if moon != testMoon {
-		t.Error("Expected", testMoon, "received", moon)
+	ApplyPlanetTidalLocking(&testPlanetB, &testMoon, stars.RedDwarf)
+	if testPlanetB.PType != result.PType && testMoon.MType != moonResult.MType {
+		t.Error("Expected", result, moonResult, "received", testPlanetB, testMoon)
 	}
 }

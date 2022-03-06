@@ -6,11 +6,13 @@ Solar Starfire is a pen and paper game created by Starfire Design Studio.  As pa
 
 ## ToDo
 
-- Finish Planet and Moon Generation with appropriate tests
+~~- Finish Planet and Moon Generation with appropriate tests~~
 - Add warp point generation
 - Add checks for planets destroyed by warp points
+- Add checks for planets destroyed by Gas Giants
 - Implement system generation
 - Implement Galaxy generation
+- Restructure pkgs to better avoid circular dependencies and to improve ease of use
 - Add a graphical interface for ease of use and display
 - Collect statics of the various components created
 - Containerize 

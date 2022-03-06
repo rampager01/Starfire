@@ -48,7 +48,7 @@ type Planet struct {
 	Mass          PlanetMass
 	Moons         []moons.Moon
 	Orbit         mechanics.Radius
-	PlanetType    PlanetType
+	PType         PlanetType
 	HIndex        int
 	Resexindex    mechanics.Rei
 	TidallyLocked bool
@@ -80,7 +80,7 @@ func GeneratePlanet(orbit int, starType stars.StarType, s rand.Source) Planet {
 		Mass:          mass,
 		Moons:         m,
 		Orbit:         orbitalRadius,
-		PlanetType:    planetType,
+		PType:         planetType,
 		HIndex:        index,
 		Resexindex:    resExIndex,
 		TidallyLocked: isLocked,
@@ -515,6 +515,61 @@ func determineRei(randNum int) mechanics.Rei {
 	}
 }
 
-func modifyTideLockedPlanets() {
-
+func ApplyPlanetTidalLocking(planet *Planet, moon *moons.Moon, starType stars.StarType) {
+	switch starType {
+	case stars.WhiteStar, stars.YellowWhiteStar, stars.YellowStar, stars.OrangeStar, stars.RedStar:
+		{
+			if planet.TidallyLocked {
+				switch planet.Mass {
+				case MassTwo, MassThree:
+					{
+						planet.PType = TypeV
+					}
+				case MassOne:
+					{
+						planet.PType = TypeH
+						moon.MType = moons.MH
+					}
+				}
+			} else {
+				if moon.IsTideLocked && planet.PType == TypeG {
+					moon.MType = moons.MH
+				}
+			}
+		}
+	case stars.RedDwarf:
+		{
+			if planet.TidallyLocked {
+				switch planet.Mass {
+				case MassOne:
+					{
+						planet.PType = TypeH
+						moon.MType = moons.MT
+					}
+				case MassTwo:
+					{
+						if moon.IsBig {
+							planet.PType = TypeT
+							moon.MType = moons.MT
+						} else {
+							planet.PType = TypeH
+							moon.MType = moons.MB
+						}
+					}
+				case MassThree:
+					{
+						if moon.IsBig {
+							planet.PType = TypeSt
+							moon.MType = moons.MT
+						} else {
+							planet.PType = TypeH
+							moon.MType = moons.MB
+						}
+					}
+				}
+			} else {
+				moon.MType = moons.MH
+			}
+		}
+	}
 }

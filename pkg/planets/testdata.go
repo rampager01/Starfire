@@ -1,6 +1,8 @@
 package planets
 
 import (
+	"github.com/rampager01/starfire-solar-galaxy-generator/pkg/mechanics"
+	"github.com/rampager01/starfire-solar-galaxy-generator/pkg/moons"
 	"github.com/rampager01/starfire-solar-galaxy-generator/pkg/stars"
 )
 
@@ -104,4 +106,119 @@ var testData []data = []data{
 	oStar,
 	rStar,
 	rdStar,
+}
+
+var testMoon moons.Moon = moons.Moon{
+	MType: moons.MB,
+	MOrbit: mechanics.Radius{
+		Radius: 6,
+		Unit:   mechanics.TacticalHex,
+	},
+	IsBig:        true,
+	IsTideLocked: true,
+	ResExpIndex:  mechanics.Normal,
+}
+
+var testPlanetB Planet = Planet{
+	Mass:  MassTwo,
+	Moons: []moons.Moon{testMoon},
+	Orbit: mechanics.Radius{
+		Radius: 1,
+		Unit:   mechanics.LightMinute,
+	},
+	PType:         TypeB,
+	HIndex:        0,
+	Resexindex:    mechanics.Normal,
+	TidallyLocked: true,
+}
+
+var testPlanetF Planet = Planet{
+	Mass:  MassTwo,
+	Moons: []moons.Moon{testMoon},
+	Orbit: mechanics.Radius{
+		Radius: 1,
+		Unit:   mechanics.LightMinute,
+	},
+	PType:         TypeF,
+	HIndex:        0,
+	Resexindex:    mechanics.Normal,
+	TidallyLocked: true,
+}
+
+var testPlanetH Planet = Planet{
+	Mass:  MassTwo,
+	Moons: []moons.Moon{testMoon},
+	Orbit: mechanics.Radius{
+		Radius: 1,
+		Unit:   mechanics.LightMinute,
+	},
+	PType:         TypeH,
+	HIndex:        0,
+	Resexindex:    mechanics.Normal,
+	TidallyLocked: true,
+}
+
+var testPlanetI Planet = Planet{
+	Mass:  MassTwo,
+	Moons: []moons.Moon{testMoon},
+	Orbit: mechanics.Radius{
+		Radius: 1,
+		Unit:   mechanics.LightMinute,
+	},
+	PType:         TypeI,
+	HIndex:        0,
+	Resexindex:    mechanics.Normal,
+	TidallyLocked: true,
+}
+
+var testPlanetT Planet = Planet{
+	Mass:  MassTwo,
+	Moons: []moons.Moon{testMoon},
+	Orbit: mechanics.Radius{
+		Radius: 1,
+		Unit:   mechanics.LightMinute,
+	},
+	PType:         TypeT,
+	HIndex:        0,
+	Resexindex:    mechanics.Normal,
+	TidallyLocked: true,
+}
+
+var testPlanetSt Planet = Planet{
+	Mass:  MassTwo,
+	Moons: []moons.Moon{testMoon},
+	Orbit: mechanics.Radius{
+		Radius: 1,
+		Unit:   mechanics.LightMinute,
+	},
+	PType:         TypeSt,
+	HIndex:        0,
+	Resexindex:    mechanics.Normal,
+	TidallyLocked: true,
+}
+
+var testPlanetV Planet = Planet{
+	Mass:  MassTwo,
+	Moons: []moons.Moon{testMoon},
+	Orbit: mechanics.Radius{
+		Radius: 1,
+		Unit:   mechanics.LightMinute,
+	},
+	PType:         TypeV,
+	HIndex:        0,
+	Resexindex:    mechanics.Normal,
+	TidallyLocked: true,
+}
+
+var testPlanetG Planet = Planet{
+	Mass:  MassTwo,
+	Moons: []moons.Moon{testMoon},
+	Orbit: mechanics.Radius{
+		Radius: 1,
+		Unit:   mechanics.LightMinute,
+	},
+	PType:         TypeG,
+	HIndex:        0,
+	Resexindex:    mechanics.Normal,
+	TidallyLocked: true,
 }
